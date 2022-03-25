@@ -39,6 +39,7 @@ class Timer:
             return res_msg
         self.relay_list.clear()
         res_msg = "전체 삭제 완료되었습니다.\n"
+        return res_msg
 
 
     # 출력 : !릴경
@@ -65,8 +66,14 @@ class Timer:
             return ""
         else:
             for relay_entity in self.relay_list:
-                if current_min == relay_entity.get_first_minute() - 1 and current_sec == 1:
+
+                # 첫 시간이 00분일 때 1분 전
+                if current_min == 59 and relay_entity.get_first_minute() == 0 and current_sec == 1:
                     return "** ⇒ " + relay_entity.stringify() + "**\n"
+                # 첫번째 시간의 1분 전
+                elif current_min == relay_entity.get_first_minute() - 1 and current_sec == 1:
+                    return "** ⇒ " + relay_entity.stringify() + "**\n"
+                # 두번째 시간의 1분 전
                 elif current_min == relay_entity.get_second_minute() - 1 and current_sec == 1:
                     return "** ⇒ " + relay_entity.stringify() + "**\n"
                 else:
