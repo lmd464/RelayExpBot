@@ -1,11 +1,13 @@
 from Timer import Timer
 from time import *
+import locale
 
 
 class Controller:
 
     def __init__(self):
         self.timer = Timer()
+        locale.setlocale(locale.LC_ALL, '')
 
     # 명령어 입력받아 파싱
     # 맞는 Timer의 메소드 호출
