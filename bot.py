@@ -34,11 +34,16 @@ async def on_message(message):
         return
 
     if message.content.startswith('!'):
-        if message.content.startswith('!종료'):
-            await message.channel.send("꽥")
+        if message.content.startswith('!kill'):
+            await message.channel.send("종료합니다.")
             sys.exit("종료합니다.")
 
         res_msg = c.input(message.content)
+
+        # 공백 스트링이 리턴될 경우 에러로 간주
+        if res_msg == "":
+            return
+
         await message.channel.send(res_msg)
 
 

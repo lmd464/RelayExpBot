@@ -79,8 +79,8 @@ class Controller:
             elif command_type == '!릴경':
                 return self.timer.print()
 
-            # 위의 형식이 아닐 경우, 에러 메시지 반환
-            else:
+            # 사용법
+            elif command_type == "!사용법":
                 res_msg = "**---------- 사용법 ----------**\n" + \
                           "- 릴경 보기 :   !릴경\n" + \
                           "- 릴경 추가 :   !등록 [채널] [분1]/[분2]\n" + \
@@ -88,9 +88,15 @@ class Controller:
                           "- 릴경 전체삭제 :   !전체삭제\n"
                 return res_msg
 
+            # 명령이 위 형식이 아닐 경우, 공백 스트링 반환 (bot에서 처리)
+            else:
+                res_msg = ""
+                return res_msg
 
+
+        # 명령 종류는 맞으나, 인자 개수를 잘못 적은 경우
         except IndexError as e:
-            res_msg = "몰라 레후\n"
+            res_msg = "몰라레후\n"
             return res_msg
 
 
