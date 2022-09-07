@@ -1,3 +1,0 @@
-token = 
-channel_id = 
-role_id = 

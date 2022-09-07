@@ -9,15 +9,15 @@ class Controller:
         self.timer = Timer()
         locale.setlocale(locale.LC_ALL, '')
 
-    # 명령어 입력받아 파싱
-    # 맞는 Timer의 메소드 호출
-    def input(self, message):
+
+    # 명령어 입력받아 파싱, 맞는 명령을 수행
+    def parse(self, message):
         command = message
         try:
             splitted = command.split(" ")
-            command_type = splitted[0]                      # splitted 0번 : 명령 종류
+            command_type = splitted[0]                      # splitted[0] : 명령 종류
 
-            # 등록
+            # 1. 등록
             if command_type == '!등록':
                 if len(splitted) < 3:
                     res_msg = "인자가 충분하지 않습니다.\n" + "Usage : !등록 [채널] [시간1]/[시간2]\n"
@@ -47,7 +47,7 @@ class Controller:
                 return self.timer.register(channel, first_minute, second_minute)
 
 
-            # 삭제
+            # 2. 삭제
             elif command_type == '!삭제':
                 if len(splitted) < 2:
                     res_msg = "인자가 충분하지 않습니다.\n" + "Usage : !삭제 [번호]\n"
@@ -72,14 +72,15 @@ class Controller:
                 return self.timer.delete(delete_number)
 
 
+            # 3. 전체삭제
             elif command_type == '!전체삭제':
                 return self.timer.delete_all()
 
-            # 출력
+            # 4. 출력
             elif command_type == '!릴경':
                 return self.timer.print()
 
-            # 사용법
+            # 5. 사용법 출력
             elif command_type == "!사용법":
                 res_msg = "**---------- 사용법 ----------**\n" + \
                           "- 릴경 보기 :   !릴경\n" + \
@@ -87,6 +88,12 @@ class Controller:
                           "- 릴경 삭제 :   !삭제 [번호]\n" + \
                           "- 릴경 전체삭제 :   !전체삭제\n"
                 return res_msg
+
+
+            # 6. 복화술 기능 : !echo 만 제거하여 그대로 리턴
+            elif command_type == "!echo":
+                return " ".join(splitted[1:])
+
 
             # 명령이 위 형식이 아닐 경우, 공백 스트링 반환 (bot에서 처리)
             else:

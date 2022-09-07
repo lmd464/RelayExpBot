@@ -20,7 +20,6 @@ class Timer:
 
         return res_msg + self.print()
 
-
     # 삭제 : !삭제 [번호]
     def delete(self, number):
         if len(self.relay_list) == 0:
@@ -31,7 +30,6 @@ class Timer:
 
         return res_msg + self.print()
 
-
     # 전체삭제 : !전체삭제
     def delete_all(self):
         if len(self.relay_list) == 0:
@@ -40,7 +38,6 @@ class Timer:
         self.relay_list.clear()
         res_msg = "전체 삭제 완료되었습니다.\n"
         return res_msg
-
 
     # 출력 : !릴경
     def print(self):
@@ -54,7 +51,6 @@ class Timer:
         else:
             res_msg = "저장된 정보가 없습니다.\n"
             return res_msg
-
 
     # 저장된 시간의 1분 전이 되면 알린다.
     # 현재 시간을 인자로 받고, Relay List에 있는 Entity들을 탐색하며

@@ -8,14 +8,18 @@ import sys
 # Token, 채널 ID, 멘션할 역할 ID를 info.txt에서 읽어옴
 ''' 
 info.txt 형식 : 
+
 token = [토큰]
-channel_id = [채널 id]
+channel_id = [릴경 알림용 채널 id]
 role_id = [역할 id]
+chat_channel_id = [복화술용 채팅채널 id]
 '''
+
 info_file = open("info.txt", 'r')
 token = info_file.readline().split("=")[1].strip()
 channel_id = int(info_file.readline().split("=")[1].strip())
 role_id = int(info_file.readline().split("=")[1].strip())
+chat_channel_id = int(info_file.readline().split("=")[1].strip())
 info_file.close()
 
 
@@ -38,13 +42,22 @@ async def on_message(message):
             await message.channel.send("종료합니다.")
             sys.exit("종료합니다.")
 
-        res_msg = c.input(message.content)
+        # 복화술 기능
+        elif message.content.startswith('!echo'):
+            res_msg = c.parse(message.content)
 
-        # 공백 스트링이 리턴될 경우 에러로 간주
-        if res_msg == "":
-            return
+            chat_channel = client.get_channel(chat_channel_id)
+            await chat_channel.send(res_msg)
 
-        await message.channel.send(res_msg)
+
+        # 릴경봇 기능
+        else:
+            res_msg = c.parse(message.content)
+            if res_msg == "":       # 공백 스트링이 리턴될 경우 에러로 간주
+                return
+
+            await message.channel.send(res_msg)
+
 
 
 # 릴경 시간 1분 전 알리는 기능
