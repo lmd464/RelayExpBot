@@ -94,11 +94,14 @@ class Controller:
             elif command_type == "!echo":
                 return " ".join(splitted[1:])
 
-
             # 7. vs
             elif " vs " in message:
                 choice_list = message.split(" vs ")
                 return choice_list[randint(0, len(choice_list) - 1)]
+
+            # 8. 애옹
+            elif "애옹" in message:
+                return "ㅋㅋㅋ"
 
 
             # 명령이 위 형식이 아닐 경우, 공백 스트링 반환 (bot 에서 처리)
