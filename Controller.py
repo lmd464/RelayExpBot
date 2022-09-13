@@ -1,6 +1,6 @@
 from Timer import Timer
-from time import *
 import locale
+from random import randint
 
 
 class Controller:
@@ -27,12 +27,12 @@ class Controller:
                 first_minute = "".join(splitted[2:]).split("/")[0].strip()    # splitted 2번 : /로 나눠진 분 정보
                 second_minute = "".join(splitted[2:]).split("/")[1].strip()
 
-                # 숫자가 아니면 걸러내기
+                # 채널, 시간이 숫자가 아니면 걸러내기
                 if (channel.isnumeric() and first_minute.isnumeric() and second_minute.isnumeric()) is not True:
                     res_msg = "숫자를 정확히 입력해주세요.\n"
                     return res_msg
 
-                # 숫자로 변환
+                # String -> 정수 로 변환
                 channel = int(channel)
                 first_minute = int(first_minute)
                 second_minute = int(second_minute)
@@ -95,7 +95,13 @@ class Controller:
                 return " ".join(splitted[1:])
 
 
-            # 명령이 위 형식이 아닐 경우, 공백 스트링 반환 (bot에서 처리)
+            # 7. vs
+            elif " vs " in message:
+                choice_list = message.split(" vs ")
+                return choice_list[randint(0, len(choice_list) - 1)]
+
+
+            # 명령이 위 형식이 아닐 경우, 공백 스트링 반환 (bot 에서 처리)
             else:
                 res_msg = ""
                 return res_msg
@@ -107,21 +113,6 @@ class Controller:
             return res_msg
 
 
-    # 현재 시간(분, 초) 를 받아와서, Timer 모듈에 넘겨줌
-    # Timer 에서는 기존에 저장된 정보와 비교하여, 알려야 할 경우 저장된 정보를 반환
-    # 저장된 정보와, 현재 시간 정보를 합친 String 반환
+    # Timer의 메소드 호출
     def notify(self):
-        current_time = localtime()
-        current_min = current_time.tm_min
-        current_sec = current_time.tm_sec
-        relay_string = self.timer.notify(current_min, current_sec)
-
-        if relay_string != "":
-            str_time = strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n', current_time)
-            res_msg = str_time + relay_string
-            return res_msg
-
-        else:
-            #print(strftime('[Debug] %I시 %M분 %S초 %p\n', current_time))
-            return relay_string
-
+        return self.timer.notify()
