@@ -38,19 +38,21 @@ async def on_message(message):
         return
 
     if message.content.startswith('!'):
+
+        # 종료 : 메시지가 온 채널로 보냄
         if message.content.startswith('!kill'):
             await message.channel.send("종료합니다.")
             sys.exit("종료합니다.")
 
-        # 복화술 기능
+        # 복화술 기능 : 채팅용 특정 채널 명시 필요하므로 따로 처리
         elif message.content.startswith('!echo'):
             res_msg = c.parse(message.content)
 
             chat_channel = client.get_channel(chat_channel_id)
             await chat_channel.send(res_msg)
 
-
-        # 릴경봇 기능
+        # 릴경봇 기능 : 메시지가 온 채널로 보냄
+        # 명령어가 아닌 경우는 Controller에서 걸러짐 (공백스트링 리턴됨)
         else:
             res_msg = c.parse(message.content)
             if res_msg == "":       # 공백 스트링이 리턴될 경우 에러로 간주
@@ -60,7 +62,7 @@ async def on_message(message):
 
 
 
-# 릴경 시간 1분 전 알리는 기능
+# 릴경 시간 1분 전 알리는 기능 : 릴경용 특정 채널 명시 필요
 async def alert_bg():
     await client.wait_until_ready()
     while not client.is_closed():
