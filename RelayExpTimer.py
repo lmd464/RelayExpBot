@@ -2,7 +2,7 @@ from RelayEntity import *
 from time import *
 
 
-class Timer:
+class RelayExpTimer:
 
     def __init__(self):
         self.relay_list = []

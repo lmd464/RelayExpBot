@@ -1,4 +1,4 @@
-from Timer import Timer
+from RelayExpTimer import RelayExpTimer     # 릴경봇 모듈
 import locale
 from random import randint
 
@@ -6,7 +6,7 @@ from random import randint
 class Controller:
 
     def __init__(self):
-        self.timer = Timer()
+        self.relay_exp_timer = RelayExpTimer()
         locale.setlocale(locale.LC_ALL, '')
 
 
@@ -16,6 +16,11 @@ class Controller:
         try:
             splitted = command.split(" ")
             command_type = splitted[0]                      # splitted[0] : 명령 종류
+
+
+            ###################
+            #      릴경명령     #
+            ###################
 
             # 1. 등록
             if command_type == '!등록':
@@ -44,7 +49,7 @@ class Controller:
                     return res_msg
 
                 # 등록
-                return self.timer.register(channel, first_minute, second_minute)
+                return self.relay_exp_timer.register(channel, first_minute, second_minute)
 
 
             # 2. 삭제
@@ -64,21 +69,21 @@ class Controller:
                 delete_number = int(delete_number)
 
                 # 인덱스 범위 검사
-                if delete_number < 1 or delete_number > len(self.timer.relay_list):
+                if delete_number < 1 or delete_number > len(self.relay_exp_timer.relay_list):
                     res_msg = "유효한 번호를 입력해주세요.\n"
                     return res_msg
 
                 # 삭제
-                return self.timer.delete(delete_number)
+                return self.relay_exp_timer.delete(delete_number)
 
 
             # 3. 전체삭제
             elif command_type == '!전체삭제':
-                return self.timer.delete_all()
+                return self.relay_exp_timer.delete_all()
 
             # 4. 출력
             elif command_type == '!릴경':
-                return self.timer.print()
+                return self.relay_exp_timer.print()
 
             # 5. 사용법 출력
             elif command_type == "!사용법":
@@ -90,18 +95,35 @@ class Controller:
                 return res_msg
 
 
-            # 6. 복화술 기능 : !echo 만 제거하여 그대로 리턴
+            ##################
+            #     부가기능     #
+            ##################
+
+            # 1. 따라말하기 : !echo 만 제거하여 그대로 리턴
             elif command_type == "!echo":
                 return " ".join(splitted[1:])
 
-            # 7. vs
+            # 2. vs
             elif " vs " in message:
                 choice_list = message.split(" vs ")
-                return choice_list[randint(0, len(choice_list) - 1)]
+                if len(choice_list) >= 2:
+                    return choice_list[randint(0, len(choice_list) - 1)]
+                else:
+                    return ""
 
             # 8. 애옹
             elif "애옹" in message:
                 return "ㅋㅋㅋ"
+
+
+            ######################
+            #      칼로스 타이머     #
+            ######################
+
+
+
+
+
 
 
             # 명령이 위 형식이 아닐 경우, 공백 스트링 반환 (bot 에서 처리)
@@ -116,6 +138,6 @@ class Controller:
             return res_msg
 
 
-    # Timer의 메소드 호출
-    def notify(self):
-        return self.timer.notify()
+    # RelayExpTimer의 메소드 호출
+    def relay_exp_notify(self):
+        return self.relay_exp_timer.notify()

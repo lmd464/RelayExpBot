@@ -10,14 +10,12 @@ info.txt 형식 :
 
 token = [토큰]
 relay_channel_id = [릴경 알림용 채널 id]
-role_id = [역할 id]
-chat_channel_id = [복화술용 채팅채널 id]
+chat_channel_id = [따라말하기용 채팅채널 id]
 '''
 
 info_file = open("info.txt", 'r')
 token = info_file.readline().split("=")[1].strip()
 relay_channel_id = int(info_file.readline().split("=")[1].strip())
-role_id = int(info_file.readline().split("=")[1].strip())
 chat_channel_id = int(info_file.readline().split("=")[1].strip())
 info_file.close()
 
@@ -42,7 +40,7 @@ async def on_message(message):
         sys.exit("종료합니다.")
 
 
-    # 파싱 결과를 "특정 채널 (채팅채널)" 로 전송 (복화술)
+    # 파싱 결과를 "특정 채널 (채팅채널)" 로 전송
     # 채팅용 특정 채널 명시 필요하므로 따로 처리
     elif message.content.startswith('!echo'):
         res_msg = c.parse(message.content)
@@ -54,28 +52,29 @@ async def on_message(message):
 
     # 파싱 결과를 "메시지가 온 채널"로 전송 (릴경명령 등 일반적인 명령)
     # 명령어가 아닌 경우는 Controller 에서 걸러져 공백 스트링이 리턴됨
+    # 공백 스트링이 리턴될 경우 아무것도 하지 않음
     else:
         res_msg = c.parse(message.content)
-        if res_msg == "":       # 공백 스트링이 리턴될 경우 에러로 간주
+        if res_msg == "":
             return
         await message.channel.send(res_msg)
 
 
 # 릴경 시간 1분 전 알리는 기능 : 릴경용 특정 채널 명시 필요
-async def alert_bg():
+async def relay_exp_alert_bg():
     await client.wait_until_ready()
     while not client.is_closed():
-        res_msg = c.notify()
+        res_msg = c.relay_exp_notify()
 
         # 릴경 항목을 "특정 채널 (릴경채널)" 로 전송 (릴경알림)
         if res_msg != "":
             channel = client.get_channel(relay_channel_id)
-            res_msg = "<@&" + str(role_id) + ">\n" + res_msg  # 역할 멘션
+            res_msg = "####### 릴경알림 #######\n" + res_msg
             await channel.send(res_msg)     # 메시지 보냄
             await asyncio.sleep(1)
         else:
             await asyncio.sleep(0.01)
 
 
-client.loop.create_task(alert_bg())
+client.loop.create_task(relay_exp_alert_bg())
 client.run(token)
