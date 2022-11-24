@@ -129,18 +129,29 @@ class Controller:
             elif command_type == "!boss":
                 ## 음성채널 입장 부분 ##
                 self.boss_mode = True
-                return "Timer on"
+                res_msg = "**####### 1 : 폭  /  2 : 레이저  /  3 : 전탄 #######**" + \
+                          "\n**####### 4 : 폭 삭제  /  5 : 레이저 삭제  /  6 : 전탄 삭제 #######**"
+                return res_msg
 
 
             elif command_type == "1" and self.boss_mode:
                 self.boss_timer.register('폭')
-                return ""
+                return "폭 알림 갱신"
             elif command_type == "2" and self.boss_mode:
                 self.boss_timer.register('레이저')
-                return ""
+                return "레이저 알림 갱신"
             elif command_type == "3" and self.boss_mode:
                 self.boss_timer.register('전탄')
-                return ""
+                return "전탄 알림 갱신"
+            elif command_type == "4" and self.boss_mode:
+                self.boss_timer.delete('폭')
+                return "폭 알림 삭제"
+            elif command_type == "5" and self.boss_mode:
+                self.boss_timer.delete('레이저')
+                return "레이저 알림 삭제"
+            elif command_type == "6" and self.boss_mode:
+                self.boss_timer.delete('전탄')
+                return "전탄 알림 삭제"
 
             elif command_type == "!bossoff":
                 self.boss_mode = False
@@ -165,4 +176,7 @@ class Controller:
 
     # BossTimer의 메소드 호출
     def boss_pattern_notify(self):
-        return self.boss_timer.notify()
+        if self.boss_mode:
+            return self.boss_timer.notify()
+        else:
+            return ""
