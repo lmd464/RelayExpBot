@@ -1,4 +1,5 @@
 from RelayExpTimer import RelayExpTimer     # 릴경봇 모듈
+from BossTimer import BossTimer    # 보스타이머 모듈
 import locale
 from random import randint
 
@@ -7,14 +8,16 @@ class Controller:
 
     def __init__(self):
         self.relay_exp_timer = RelayExpTimer()
+        self.boss_timer = BossTimer()
+        self.boss_mode = False  # 보스 타이머 모드
         locale.setlocale(locale.LC_ALL, '')
+
 
 
     # 명령어 입력받아 파싱, 맞는 명령을 수행
     def parse(self, message):
-        command = message
         try:
-            splitted = command.split(" ")
+            splitted = message.content.split(" ")
             command_type = splitted[0]                      # splitted[0] : 명령 종류
 
 
@@ -104,15 +107,15 @@ class Controller:
                 return " ".join(splitted[1:])
 
             # 2. vs
-            elif " vs " in message:
-                choice_list = message.split(" vs ")
+            elif " vs " in message.content:
+                choice_list = message.content.split(" vs ")
                 if len(choice_list) >= 2:
                     return choice_list[randint(0, len(choice_list) - 1)]
                 else:
                     return ""
 
             # 8. 애옹
-            elif "애옹" in message:
+            elif "애옹" in message.content:
                 return "ㅋㅋㅋ"
 
 
@@ -120,10 +123,28 @@ class Controller:
             #      칼로스 타이머     #
             ######################
 
+            # 입장해있는 음성채널 & 채팅채널 정보 읽어옴
+            # 명령을 시작한 채팅채널로부터 채팅을 읽어와, 타이머 시작
+            # 타이머가 만료되면 음성채널로 mp3파일 재생
+            elif command_type == "!boss":
+                ## 음성채널 입장 부분 ##
+                self.boss_mode = True
+                return "Timer on"
 
 
+            elif command_type == "1" and self.boss_mode:
+                self.boss_timer.register('폭')
+                return ""
+            elif command_type == "2" and self.boss_mode:
+                self.boss_timer.register('레이저')
+                return ""
+            elif command_type == "3" and self.boss_mode:
+                self.boss_timer.register('전탄')
+                return ""
 
-
+            elif command_type == "!bossoff":
+                self.boss_mode = False
+                return "Timer off"
 
 
             # 명령이 위 형식이 아닐 경우, 공백 스트링 반환 (bot 에서 처리)
@@ -141,3 +162,7 @@ class Controller:
     # RelayExpTimer의 메소드 호출
     def relay_exp_notify(self):
         return self.relay_exp_timer.notify()
+
+    # BossTimer의 메소드 호출
+    def boss_pattern_notify(self):
+        return self.boss_timer.notify()

@@ -5,7 +5,7 @@ import sys
 
 
 ''' 
-<< Token, 채널 ID, 멘션할 역할 ID를 info.txt에서 읽어옴 >>
+<< Token, 채널 ID를 info.txt에서 읽어옴 >>
 info.txt 형식 : 
 
 token = [토큰]
@@ -43,7 +43,7 @@ async def on_message(message):
     # 파싱 결과를 "특정 채널 (채팅채널)" 로 전송
     # 채팅용 특정 채널 명시 필요하므로 따로 처리
     elif message.content.startswith('!echo'):
-        res_msg = c.parse(message.content)
+        res_msg = c.parse(message)
         if res_msg == "":
             return
         chat_channel = client.get_channel(chat_channel_id)
@@ -54,13 +54,14 @@ async def on_message(message):
     # 명령어가 아닌 경우는 Controller 에서 걸러져 공백 스트링이 리턴됨
     # 공백 스트링이 리턴될 경우 아무것도 하지 않음
     else:
-        res_msg = c.parse(message.content)
+        res_msg = c.parse(message)
         if res_msg == "":
             return
         await message.channel.send(res_msg)
 
 
-# 릴경 시간 1분 전 알리는 기능 : 릴경용 특정 채널 명시 필요
+# 현재 시각에 따라 알림 or 빈 스트링 받아와서 결과를 걸러 보냄 (loop)
+# 알림을 보낼, 릴경용 특정 채널 명시 필요
 async def relay_exp_alert_bg():
     await client.wait_until_ready()
     while not client.is_closed():
@@ -76,5 +77,20 @@ async def relay_exp_alert_bg():
             await asyncio.sleep(0.01)
 
 
+async def boss_pattern_alert_bg():
+    await client.wait_until_ready()
+    while not client.is_closed():
+        res_msg = c.boss_pattern_notify()
+
+        # TODO : 릴경채널로 보내도록 임시 설정, 나중에 변경할 것
+        if res_msg != "":
+            channel = client.get_channel(relay_channel_id)
+            await channel.send(res_msg)
+            await asyncio.sleep(1)
+        else:
+            await asyncio.sleep(0.01)
+
+
 client.loop.create_task(relay_exp_alert_bg())
+client.loop.create_task(boss_pattern_alert_bg())
 client.run(token)
