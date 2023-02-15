@@ -125,10 +125,29 @@ class Controller:
             # 9. 계좌목록
             elif command_type == "!계좌":
                 if len(splitted) > 1:   # 인자 있음
-                    acc_name = "".join(splitted[1:])
+                    acc_name = " ".join(splitted[1:])
                     return self.bank_account.get_bank_account(acc_name)
                 else:
-                    return "이름넣어라"
+                    return "이름 넣어야함"
+
+            # 10. 계좌추가, 삭제
+            elif command_type == "!계좌추가":
+                if len(splitted) > 2:
+                    acc_name = splitted[1]
+                    acc = " ".join(splitted[2:])
+                    self.bank_account.add_bank_account(acc_name, acc)
+                    return "추가완료"
+                else:
+                    return "사용법 : !계좌추가 이름 계좌"
+
+            elif command_type == "!계좌삭제":
+                if len(splitted) > 1:
+                    acc_name = splitted[1]
+                    self.bank_account.delete_bank_account(acc_name)
+                    return "삭제완료"
+                else:
+                    return "사용법 : !계좌삭제 이름"
+
 
             '''
             ######################

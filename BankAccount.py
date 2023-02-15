@@ -19,4 +19,24 @@ class BankAccount:
         else:
             return name + " : " + acc
 
+    def add_bank_account(self, name, acc):
+        self.account_dict[name] = acc
+
+        # 파일에 추가
+        self.account_txt = open("bank_account.txt", 'a')
+        new_acc = name + " : " + acc
+        self.account_txt.write(new_acc)
+        self.account_txt.close()
+        return "추가완료"
+
+    def delete_bank_account(self, name):
+        self.account_dict.pop(name)
+
+        # 새 텍스트파일로 갱신
+        self.account_txt = open("bank_account.txt", 'w')
+        for key, value in self.account_dict:
+            self.account_txt.write(key + " : " + value)
+        self.account_txt.close()
+        return "삭제완료"
+
 

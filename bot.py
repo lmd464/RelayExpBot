@@ -44,7 +44,7 @@ async def on_message(message):
     # 채팅용 특정 채널 명시 필요하므로 따로 처리
     elif message.content.startswith('!echo'):
         res_msg = c.parse(message)
-        if res_msg == "":
+        if res_msg == "" or res_msg is None:
             return
         chat_channel = client.get_channel(chat_channel_id)
         await chat_channel.send(res_msg)
@@ -59,7 +59,7 @@ async def on_message(message):
         #await my_channel.send(message.author.name + ": " + message.content)
 
         res_msg = c.parse(message)
-        if res_msg == "":
+        if res_msg == "" or res_msg is None:
             return
 
         await message.channel.send(res_msg)
@@ -74,7 +74,7 @@ async def relay_exp_alert_bg():
         res_msg = c.relay_exp_notify()
 
         # 릴경 항목을 "특정 채널 (릴경채널)" 로 전송 (릴경알림)
-        if res_msg != "":
+        if res_msg != "":   # 시간이 안됐을 경우 빈 문자열 받음
             channel = client.get_channel(relay_channel_id)
             res_msg = "####### 릴경알림 #######\n" + res_msg
             await channel.send(res_msg)     # 메시지 보냄
@@ -102,3 +102,4 @@ client.loop.create_task(boss_pattern_alert_bg())
 client.loop.create_task(relay_exp_alert_bg())
 
 client.run(token)
+\
