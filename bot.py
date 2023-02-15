@@ -102,4 +102,3 @@ client.loop.create_task(boss_pattern_alert_bg())
 client.loop.create_task(relay_exp_alert_bg())
 
 client.run(token)
-\
