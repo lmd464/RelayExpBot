@@ -25,7 +25,7 @@ class BankAccount:
         # 파일에 추가
         self.account_txt = open("bank_account.txt", 'a')
         new_acc = name + " : " + acc
-        self.account_txt.write(new_acc)
+        self.account_txt.write("\n" + new_acc)
         self.account_txt.close()
         return "추가완료"
 
