@@ -54,10 +54,16 @@ async def on_message(message):
     # 명령어가 아닌 경우는 Controller 에서 걸러져 공백 스트링이 리턴됨
     # 공백 스트링이 리턴될 경우 아무것도 하지 않음
     else:
+        # Test_ChatCopy
+        #my_channel = client.get_channel(1068063085782380626)
+        #await my_channel.send(message.author.name + ": " + message.content)
+
         res_msg = c.parse(message)
         if res_msg == "":
             return
+
         await message.channel.send(res_msg)
+
 
 
 # 현재 시각에 따라 알림 or 빈 스트링 받아와서 결과를 걸러 보냄 (loop)
@@ -76,7 +82,7 @@ async def relay_exp_alert_bg():
         else:
             await asyncio.sleep(0.01)
 
-
+'''
 async def boss_pattern_alert_bg():
     await client.wait_until_ready()
     while not client.is_closed():
@@ -89,8 +95,10 @@ async def boss_pattern_alert_bg():
             await asyncio.sleep(1)
         else:
             await asyncio.sleep(0.01)
-
+            
+client.loop.create_task(boss_pattern_alert_bg())
+'''
 
 client.loop.create_task(relay_exp_alert_bg())
-client.loop.create_task(boss_pattern_alert_bg())
+
 client.run(token)

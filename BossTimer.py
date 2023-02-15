@@ -1,3 +1,4 @@
+"""
 from time import *
 import sys
 
@@ -44,7 +45,7 @@ class BossTimer:
         current_time = int(time())
         if self.pattern_time_list['폭'] - current_time < 3:
             self.pattern_time_list['폭'] += 10.0
-            return '터짐'
+            return '폭'
         if self.pattern_time_list['레이저'] - current_time < 3:
             self.pattern_time_list['레이저'] += 15.0
             return '레이저'
@@ -54,3 +55,4 @@ class BossTimer:
 
         return ''
 
+"""

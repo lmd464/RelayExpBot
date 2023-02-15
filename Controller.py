@@ -1,5 +1,6 @@
-from RelayExpTimer import RelayExpTimer     # 릴경봇 모듈
-from BossTimer import BossTimer    # 보스타이머 모듈
+from RelayExpTimer import *     # 릴경봇 모듈
+#from BossTimer import *    # 보스타이머 모듈
+from BankAccount import *
 import locale
 from random import randint
 
@@ -8,8 +9,11 @@ class Controller:
 
     def __init__(self):
         self.relay_exp_timer = RelayExpTimer()
+        '''
         self.boss_timer = BossTimer()
         self.boss_mode = False  # 보스 타이머 모드
+        '''
+        self.bank_account = BankAccount()
         locale.setlocale(locale.LC_ALL, '')
 
 
@@ -102,7 +106,7 @@ class Controller:
             #     부가기능     #
             ##################
 
-            # 1. 따라말하기 : !echo 만 제거하여 그대로 리턴
+            # 1. 따라함 : !echo 만 제거하여 그대로 리턴
             elif command_type == "!echo":
                 return " ".join(splitted[1:])
 
@@ -116,14 +120,22 @@ class Controller:
 
             # 8. 애옹
             elif "애옹" in message.content:
-                return "ㅋㅋㅋ"
+                return "ㅖㅏ"
 
+            # 9. 계좌목록
+            elif command_type == "!계좌":
+                if len(splitted) > 1:   # 인자 있음
+                    acc_name = "".join(splitted[1:])
+                    return self.bank_account.get_bank_account(acc_name)
+                else:
+                    return "이름넣어라"
 
+            '''
             ######################
             #      칼로스 타이머     #
             ######################
 
-            # 입장해있는 음성채널 & 채팅채널 정보 읽어옴
+            # message를 보낸 사람이 입장해있는 음성채널 & 채팅채널 정보 읽어옴
             # 명령을 시작한 채팅채널로부터 채팅을 읽어와, 타이머 시작
             # 타이머가 만료되면 음성채널로 mp3파일 재생
             elif command_type == "!boss":
@@ -162,7 +174,7 @@ class Controller:
             else:
                 res_msg = ""
                 return res_msg
-
+            '''
 
         # 명령 종류는 맞으나, 인자 개수를 잘못 적은 경우
         except IndexError as e:
@@ -174,9 +186,11 @@ class Controller:
     def relay_exp_notify(self):
         return self.relay_exp_timer.notify()
 
+    '''
     # BossTimer의 메소드 호출
     def boss_pattern_notify(self):
         if self.boss_mode:
             return self.boss_timer.notify()
         else:
             return ""
+    '''
