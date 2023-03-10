@@ -4,16 +4,19 @@ class ChatSniffer:
 
     def __init__(self, client):
         self.client = client
-        self.my_fetch_channel_id = 1068063085782380626
+        self.my_fetch_channel_id = 1068063085782380626  # 채팅 저장소
         self.my_fetch_channel = self.client.get_channel(self.my_fetch_channel_id)
 
+    # 모든 채널에 대한 채팅을 my_fetch_channel 로 송출
     async def send_to_my_channel(self, message):
-        await self.my_fetch_channel.send(message.guild.name + "(" +
-                                         message.channel.name + ") ~ " +
-                                         message.author.name + "#" +
-                                         message.author.discriminator + " : " +
-                                         message.content)
+        if message.channel.id != self.my_fetch_channel_id:
+            await self.my_fetch_channel.send(message.guild.name + "(" +
+                                             message.channel.name + ") ~ " +
+                                             message.author.name + "#" +
+                                             message.author.discriminator + " : " +
+                                             message.content)
 
+    # 채팅채널 fetch한 채널에 메시지 쓰면 그대로 전달 (자동 echo)
     async def message_autosend(self, message, chat_channel_id):
         if message.channel.id == self.my_fetch_channel_id:
             chat_channel = self.client.get_channel(chat_channel_id)
