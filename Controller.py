@@ -14,6 +14,7 @@ class Controller:
         self.boss_mode = False  # 보스 타이머 모드
         '''
         self.bank_account = BankAccount()
+
         locale.setlocale(locale.LC_ALL, '')
 
 
@@ -106,11 +107,11 @@ class Controller:
             #     부가기능     #
             ##################
 
-            # 1. 따라함 : !echo 만 제거하여 그대로 리턴
+            # 6. 따라함 : !echo 만 제거하여 그대로 리턴
             elif command_type == "!echo":
                 return " ".join(splitted[1:])
 
-            # 2. vs
+            # 7. vs
             elif " vs " in message.content:
                 choice_list = message.content.split(" vs ")
                 if len(choice_list) >= 2:
@@ -118,11 +119,7 @@ class Controller:
                 else:
                     return ""
 
-            # 8. 애옹
-            elif "애옹" in message.content:
-                return "ㅖㅏ"
-
-            # 9. 계좌목록
+            # 8. 계좌목록
             elif command_type == "!계좌":
                 if len(splitted) > 1:   # 인자 있음
                     acc_name = " ".join(splitted[1:])
@@ -130,7 +127,7 @@ class Controller:
                 else:
                     return "이름 넣어야함"
 
-            # 10. 계좌추가, 삭제
+            # 9. 계좌추가, 삭제
             elif command_type == "!계좌추가":
                 if len(splitted) > 2:
                     acc_name = splitted[1]

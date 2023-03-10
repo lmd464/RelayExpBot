@@ -55,15 +55,20 @@ async def on_message(message):
         chat_channel = client.get_channel(chat_channel_id)
         await chat_channel.send(res_msg)
 
+    # Fetch mode ON/OFF
+    elif message.content.startswith('!fetch'):
+        mode = str(chat_sniffer.toggle())
+        await message.channel.send(mode)
+
 
     # 파싱 결과를 "메시지가 온 채널"로 전송 (릴경명령 등 일반적인 명령)
     # 명령어가 아닌 경우는 Controller 에서 걸러져 공백 스트링이 리턴됨
     # 공백 스트링이 리턴될 경우 아무것도 하지 않음
     else:
-        # Test : 채팅복사
-        await chat_sniffer.send_to_my_channel(message)
-        # Test : 채팅보내기
-        await chat_sniffer.message_autosend(message, chat_channel_id)
+        # Test : 채팅복사, 채팅보내기
+        if chat_sniffer.fetch_mode:
+            await chat_sniffer.send_to_my_channel(message)
+            await chat_sniffer.message_autosend(message, chat_channel_id)
         #################
 
         res_msg = c.parse(message)
