@@ -2,6 +2,7 @@ import discord
 from Controller import *
 import asyncio
 import sys
+from ChatSniffer import *
 
 
 ''' 
@@ -22,11 +23,14 @@ info_file.close()
 
 client = discord.Client()
 c = Controller()
+chat_sniffer = None
 
 
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
+    global chat_sniffer
+    chat_sniffer = ChatSniffer(client)
 
 
 @client.event
@@ -54,10 +58,9 @@ async def on_message(message):
     # 명령어가 아닌 경우는 Controller 에서 걸러져 공백 스트링이 리턴됨
     # 공백 스트링이 리턴될 경우 아무것도 하지 않음
     else:
-        # Test_ChatCopy
-        #my_channel = client.get_channel(1068063085782380626)
-        #await my_channel.send(message.author.name + ": " + message.content)
-
+        # Test : 채팅복사 #
+        await chat_sniffer.send_to_my_channel(message)
+        #################
         res_msg = c.parse(message)
         if res_msg == "" or res_msg is None:
             return
