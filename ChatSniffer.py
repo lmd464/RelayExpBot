@@ -7,7 +7,8 @@ class ChatSniffer:
         self.my_channel = self.client.get_channel(1068063085782380626)
 
     async def send_to_my_channel(self, message):
-        await self.my_channel.send(message.guild.name + "_" +
-                                   message.channel.name + " - " +
-                                   message.author.name + " : " +
+        await self.my_channel.send(message.guild.name + "(" +
+                                   message.channel.name + ") ~ " +
+                                   message.author.name + "#" +
+                                   message.author.discriminator + " : " +
                                    message.content)
