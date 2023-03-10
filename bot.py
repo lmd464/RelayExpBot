@@ -35,6 +35,8 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+
+    # 봇 자신의 메시지는 거름
     if message.author == client.user:
         return
 
@@ -58,9 +60,12 @@ async def on_message(message):
     # 명령어가 아닌 경우는 Controller 에서 걸러져 공백 스트링이 리턴됨
     # 공백 스트링이 리턴될 경우 아무것도 하지 않음
     else:
-        # Test : 채팅복사 #
+        # Test : 채팅복사
         await chat_sniffer.send_to_my_channel(message)
+        # Test : 채팅보내기
+        await chat_sniffer.message_autosend(message, chat_channel_id)
         #################
+
         res_msg = c.parse(message)
         if res_msg == "" or res_msg is None:
             return
