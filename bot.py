@@ -88,29 +88,13 @@ async def relay_exp_alert_bg():
 
         # 릴경 항목을 "특정 채널 (릴경채널)" 로 전송 (릴경알림)
         if res_msg != "":   # 시간이 안됐을 경우 빈 문자열 받음
-            channel = client.get_channel(relay_channel_id)
-            res_msg = "####### 릴경알림 #######\n" + res_msg
+            channel = client.get_channel(chat_channel_id)   # TODO : relay_channel_id -> chat_channel_id 임시
+            res_msg = "**[ 릴경알림 ]**\n" + res_msg
             await channel.send(res_msg)     # 메시지 보냄
             await asyncio.sleep(1)
         else:
             await asyncio.sleep(0.01)
 
-'''
-async def boss_pattern_alert_bg():
-    await client.wait_until_ready()
-    while not client.is_closed():
-        res_msg = c.boss_pattern_notify()
-
-        # TODO : 릴경채널로 보내도록 임시 설정, 나중에 변경할 것
-        if res_msg != "":
-            channel = client.get_channel(relay_channel_id)
-            await channel.send(res_msg)
-            await asyncio.sleep(1)
-        else:
-            await asyncio.sleep(0.01)
-            
-client.loop.create_task(boss_pattern_alert_bg())
-'''
 
 client.loop.create_task(relay_exp_alert_bg())
 
