@@ -133,23 +133,21 @@ class Controller:
                     acc_name = " ".join(splitted[1:])
                     return self.bank_account.get_bank_account(acc_name)
                 else:
-                    return "이름 넣어야함"
+                    return "사용법 : !계좌 이름"
 
             # 계좌추가, 삭제
             elif command_type == "!계좌추가":
                 if len(splitted) > 2:
                     acc_name = splitted[1]
                     acc = " ".join(splitted[2:])
-                    self.bank_account.add_bank_account(acc_name, acc)
-                    return "추가완료"
+                    return self.bank_account.add_bank_account(acc_name, acc)
                 else:
                     return "사용법 : !계좌추가 이름 계좌"
 
             elif command_type == "!계좌삭제":
                 if len(splitted) > 1:
                     acc_name = splitted[1]
-                    self.bank_account.delete_bank_account(acc_name)
-                    return "삭제완료"
+                    return self.bank_account.delete_bank_account(acc_name)
                 else:
                     return "사용법 : !계좌삭제 이름"
 

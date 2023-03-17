@@ -15,7 +15,7 @@ class BankAccount:
     def get_bank_account(self, name):
         acc = self.account_dict.get(name)
         if acc is None:
-            return "없다"
+            return "등록된 정보가 없습니다."
         else:
             return name + " : " + acc
 
@@ -27,7 +27,7 @@ class BankAccount:
         new_acc = name + " : " + acc
         self.account_txt.write("\n" + new_acc)
         self.account_txt.close()
-        return "추가완료"
+        return "계좌 목록에 추가되었습니다."
 
     def delete_bank_account(self, name):
         self.account_dict.pop(name, None)
@@ -37,6 +37,6 @@ class BankAccount:
         for key, value in self.account_dict.items():
             self.account_txt.write(key + " : " + value + '\n')
         self.account_txt.close()
-        return "삭제완료"
+        return "계좌 정보가 삭제되었습니다."
 
 
