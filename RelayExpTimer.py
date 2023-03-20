@@ -1,13 +1,12 @@
 from RelayEntity import *
 from time import *
-from MessageEmbed import *
+
 
 class RelayExpTimer:
 
     def __init__(self):
         self.relay_list = []
         self.user_id_list = []  # 멘션으로 알릴 사용자 리스트
-        self.msg_emb = MessageEmbed()
 
     # 등록 : !등록 [채널] [분1]/[분2]
     # 시간 순서대로 정렬시킴
@@ -78,17 +77,11 @@ class RelayExpTimer:
                         (current_min == relay_entity.get_second_minute() - 1 and current_sec == 1):
 
                     str_time = strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n', current_time)
-                    '''
                     saved_entity = "** ⇒ " + relay_entity.stringify() + "**\n"
                     user_to_mention = "<@{0}>\n".format("> <@".join(self.user_id_list)) if len(self.user_id_list) > 0 \
                         else ""
                     info_str = "(!알림 / !알림삭제)\n"
                     return str_time + saved_entity + user_to_mention + info_str
-                    '''
-                    return self.msg_emb.make_embed_message_for_relay_notify(str_time, "릴경알림", relay_entity)
-
-
-
 
                 # 알릴 시간이 아님. 루프
                 else:
