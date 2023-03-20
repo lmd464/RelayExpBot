@@ -85,7 +85,7 @@ class Controller:
                 return self.relay_exp_timer.delete_all()
 
             # 4. 출력
-            elif command_type == '!릴경':
+            elif command_type == '!릴경' or command_type == '!ㄹ':
                 return self.relay_exp_timer.print()
 
             # 5. 사용법 출력
@@ -95,7 +95,7 @@ class Controller:
                           "- 추가 :   !등록 [채널] [분1]/[분2]\n" + \
                           "- 삭제 :   !삭제 [번호]\n" + \
                           "- 전체삭제 :   !전체삭제\n" + \
-                          "- 멘션알림 : !알림, !알림삭제\n"
+                          "- 멘션알림 : !알림, !알림해제\n"
                 return res_msg
 
             # 6. 멘션 알림
@@ -104,7 +104,7 @@ class Controller:
                 self.relay_exp_timer.add_user(user_id_to_alert)
                 return message.author.name + " 에게 알림 설정되었습니다."
 
-            elif command_type == "!알림삭제" and len(splitted) == 1:
+            elif command_type == "!알림해제" and len(splitted) == 1:
                 user_id_to_unalert = str(message.author.id)
                 self.relay_exp_timer.delete_user(user_id_to_unalert)
                 return message.author.name + " 에게 알림 해제되었습니다."

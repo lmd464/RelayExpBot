@@ -80,7 +80,7 @@ class RelayExpTimer:
                     saved_entity = "** ⇒ " + relay_entity.stringify() + "**\n"
                     user_to_mention = "<@{0}>\n".format("> <@".join(self.user_id_list)) if len(self.user_id_list) > 0 \
                         else ""
-                    info_str = "(!알림 / !알림삭제)\n"
+                    info_str = "(!알림 / !알림해제)\n"
                     return str_time + saved_entity + user_to_mention + info_str
 
                 # 알릴 시간이 아님. 루프
