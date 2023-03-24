@@ -44,6 +44,7 @@ async def on_message(message):
         sys.exit("종료합니다.")
 
 
+    # echo
     # 파싱 결과를 "특정 채널 (채팅채널)" 로 전송
     # 채팅용 특정 채널 명시 필요하므로 따로 처리
     elif message.content.startswith('!echo'):
@@ -85,8 +86,8 @@ async def relay_exp_alert_bg():
         res_msg = c.relay_exp_notify()
 
         # 릴경 항목을 "특정 채널 (채팅채널)" 로 전송 (릴경알림)
-        if res_msg != "":   # 시간이 안됐을 경우 빈 문자열 받음
-            channel = client.get_channel(chat_channel_id)
+        if res_msg != "":   # 시간이 안됐을 경우 빈 문자열 받음, 알림X
+            channel = client.get_channel(c.get_relay_channel())
             res_msg = "**[ 릴경알림 ]**\n" + res_msg
             await channel.send(res_msg)     # 메시지 보냄
             await asyncio.sleep(1)

@@ -7,6 +7,13 @@ class RelayExpTimer:
     def __init__(self):
         self.relay_list = []
         self.user_id_list = []  # 멘션으로 알릴 사용자 리스트
+        self.relay_channel_id = -1  # 알림 채널 설정
+
+    def get_relay_channel(self):
+        return self.relay_channel_id
+    def set_relay_channel(self, relay_channel_id):
+        self.relay_channel_id = int(relay_channel_id)
+
 
     # 등록 : !등록 [채널] [분1]/[분2]
     # 시간 순서대로 정렬시킴
@@ -54,6 +61,7 @@ class RelayExpTimer:
             res_msg = "저장된 정보가 없습니다.\n"
             return res_msg
 
+
     # 현재 시간이 저장된 시간의 1분 전이라면 해당 정보 스트링을 반환한다.
     # 현재 시간(분, 초) 을 받아와서, Relay List 에 있는 Entity 들을 탐색하며
     # 알려야 하는 요소가 있으면 현재 시간과 저장된 시간에 대한 String 반환
@@ -63,11 +71,11 @@ class RelayExpTimer:
         current_min = current_time.tm_min
         current_sec = current_time.tm_sec
 
-        # 알릴 정보가 없는 상태 :
-        if len(self.relay_list) == 0:
+        # 알릴 정보가 없거나, 채널이 설정되지 않은 상태 :
+        if len(self.relay_list) == 0 or self.relay_channel_id == -1:
             return ""
 
-        # 알릴 정보가 있는 상태
+        # 알릴 정보가 있고, 채널이 설정된 상태
         else:
             for relay_entity in self.relay_list:
 
@@ -80,7 +88,7 @@ class RelayExpTimer:
                     saved_entity = "** ⇒ " + relay_entity.stringify() + "**\n"
                     user_to_mention = "<@{0}>\n".format("> <@".join(self.user_id_list)) if len(self.user_id_list) > 0 \
                         else ""
-                    info_str = "(!알림 / !알림해제)\n"
+                    info_str = "(멘션알림 : !알림 / !알림해제)\n"
                     return str_time + saved_entity + user_to_mention + info_str
 
                 # 알릴 시간이 아님. 루프
