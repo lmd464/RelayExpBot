@@ -10,13 +10,11 @@ from ChatSniffer import *
 info.txt 형식 : 
 
 token = [토큰]
-relay_channel_id = [릴경 알림용 채널 id]
-chat_channel_id = [따라말하기용 채팅채널 id]
+chat_channel_id = [채팅채널 id]
 '''
 
 info_file = open("info.txt", 'r')
 token = info_file.readline().split("=")[1].strip()
-relay_channel_id = int(info_file.readline().split("=")[1].strip())
 chat_channel_id = int(info_file.readline().split("=")[1].strip())
 info_file.close()
 
@@ -86,9 +84,9 @@ async def relay_exp_alert_bg():
     while not client.is_closed():
         res_msg = c.relay_exp_notify()
 
-        # 릴경 항목을 "특정 채널 (릴경채널)" 로 전송 (릴경알림)
+        # 릴경 항목을 "특정 채널 (채팅채널)" 로 전송 (릴경알림)
         if res_msg != "":   # 시간이 안됐을 경우 빈 문자열 받음
-            channel = client.get_channel(chat_channel_id)   # TODO : relay_channel_id -> chat_channel_id 임시
+            channel = client.get_channel(chat_channel_id)
             res_msg = "**[ 릴경알림 ]**\n" + res_msg
             await channel.send(res_msg)     # 메시지 보냄
             await asyncio.sleep(1)
