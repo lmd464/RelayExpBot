@@ -1,34 +1,30 @@
 import discord
+from discord.ext import tasks
 from Controller import *
 import asyncio
 import sys
-from ChatSniffer import *
-
 
 ''' 
 << Token, 채널 ID를 info.txt에서 읽어옴 >>
 info.txt 형식 : 
 
 token = [토큰]
-chat_channel_id = [채팅채널 id]
 '''
 
 info_file = open("info.txt", 'r')
 token = info_file.readline().split("=")[1].strip()
-chat_channel_id = int(info_file.readline().split("=")[1].strip())
 info_file.close()
 
-
-client = discord.Client()
+intents = discord.Intents.default()
+intents.message_content = True
+client = discord.Client(intents=intents)
 c = Controller()
-chat_sniffer = None
 
 
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
-    global chat_sniffer
-    chat_sniffer = ChatSniffer(client)
+    relay_exp_alert_bg.start()
 
 
 @client.event
@@ -43,33 +39,10 @@ async def on_message(message):
         await message.channel.send("종료합니다.")
         sys.exit("종료합니다.")
 
-
-    # echo
-    # 파싱 결과를 "특정 채널 (채팅채널)" 로 전송
-    # 채팅용 특정 채널 명시 필요하므로 따로 처리
-    elif message.content.startswith('!echo'):
-        res_msg = c.parse(message)
-        if res_msg == "" or res_msg is None:
-            return
-        chat_channel = client.get_channel(chat_channel_id)
-        await chat_channel.send(res_msg)
-
-    # Fetch mode ON/OFF
-    elif message.content.startswith('!fetch'):
-        mode = str(chat_sniffer.toggle())
-        await message.channel.send(mode)
-
-
     # 파싱 결과를 "메시지가 온 채널"로 전송 (릴경명령 등 일반적인 명령)
     # 명령어가 아닌 경우는 Controller 에서 걸러져 공백 스트링이 리턴됨
     # 공백 스트링이 리턴될 경우 아무것도 하지 않음
     else:
-        # Test : 채팅복사, 채팅보내기
-        if chat_sniffer.fetch_mode:
-            await chat_sniffer.send_to_my_channel(message)
-            await chat_sniffer.message_autosend(message, chat_channel_id)
-        #################
-
         res_msg = c.parse(message)
         if res_msg == "" or res_msg is None:
             return
@@ -80,6 +53,7 @@ async def on_message(message):
 
 # 현재 시각에 따라 알림 or 빈 스트링 받아와서 결과를 걸러 보냄 (loop)
 # 알림을 보낼, 릴경용 특정 채널 명시 필요
+@tasks.loop(seconds=0.5)
 async def relay_exp_alert_bg():
     await client.wait_until_ready()
     while not client.is_closed():
@@ -93,8 +67,5 @@ async def relay_exp_alert_bg():
             await asyncio.sleep(1)
         else:
             await asyncio.sleep(0.01)
-
-
-client.loop.create_task(relay_exp_alert_bg())
 
 client.run(token)
