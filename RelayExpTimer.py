@@ -21,31 +21,24 @@ class RelayExpTimer:
         relay_entity = RelayEntity(channel, first_minute, second_minute)
         self.relay_list.append(relay_entity)
 
-        res_msg = "등록 완료 되었습니다.\n"
-
         # 정렬
         self.relay_list = sorted(self.relay_list, key=lambda entity: entity.first_minute)
 
-        return res_msg + self.print()
+        return "등록 완료 되었습니다.\n" + self.print()
 
     # 삭제 : !삭제 [번호]
     def delete(self, number):
         if len(self.relay_list) == 0:
-            res_msg = "삭제할 항목이 없습니다.\n"
-            return res_msg
+            return "삭제할 항목이 없습니다.\n"
         self.relay_list.pop(number - 1)
-        res_msg = "삭제 완료되었습니다.\n"
-
-        return res_msg + self.print()
+        return "삭제 완료되었습니다.\n" + self.print()
 
     # 전체삭제 : !전체삭제
     def delete_all(self):
         if len(self.relay_list) == 0:
-            res_msg = "삭제할 항목이 없습니다.\n"
-            return res_msg
+            return "삭제할 항목이 없습니다.\n"
         self.relay_list.clear()
-        res_msg = "전체 삭제 완료되었습니다.\n"
-        return res_msg
+        return "전체 삭제 완료되었습니다.\n"
 
     # 출력 : !릴경
     def print(self):
@@ -57,8 +50,7 @@ class RelayExpTimer:
                 num += 1
             return res_msg
         else:
-            res_msg = "저장된 정보가 없습니다.\n"
-            return res_msg
+            return "저장된 정보가 없습니다.\n"
 
 
     # 현재 시간이 저장된 시간의 1분 전이라면 해당 정보 스트링을 반환한다.
