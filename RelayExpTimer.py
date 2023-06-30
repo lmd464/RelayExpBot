@@ -6,7 +6,6 @@ class RelayExpTimer:
 
     def __init__(self):
         self.relay_list = []
-        self.user_id_list = []  # 멘션으로 알릴 사용자 리스트
         self.relay_channel_id = -1  # 알림 채널 설정
 
     def get_relay_channel(self):
@@ -86,9 +85,9 @@ class RelayExpTimer:
 
                     str_time = strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n', current_time)
                     saved_entity = "** ⇒ " + relay_entity.stringify() + "**\n"
-                    user_to_mention = "<@{0}>\n".format("> <@".join(self.user_id_list)) if len(self.user_id_list) > 0 \
-                        else ""
-                    info_str = "(멘션알림 : !알림 / !알림해제)\n"
+                    user_to_mention = "<@{0}>\n".format("> <@".join(relay_entity.get_user())) \
+                        if len(relay_entity.get_user()) > 0 else ""
+                    info_str = "(멘션알림 : !알림 [번호] / !알림해제 [번호])\n"
                     return str_time + saved_entity + user_to_mention + info_str
 
                 # 알릴 시간이 아님. 루프
@@ -98,16 +97,9 @@ class RelayExpTimer:
 
             return ""
 
-    # 멘션할 유저 추가/삭제/반환
-    def add_user(self, user_id):
-        self.user_id_list.append(user_id)
-        self.user_id_list = list(set(self.user_id_list))
+    # 멘션할 유저 추가/삭제/반환 : 선택한 채널의 RelayEntity 에서 수행
+    def add_user(self, user_id, alert_num):
+        self.relay_list[alert_num - 1].add_user(user_id)
 
-    def delete_user(self, user_id):
-        if user_id not in self.user_id_list:
-            return
-        else:
-            self.user_id_list.remove(user_id)
-
-    def get_user(self):
-        return self.user_id_list
+    def delete_user(self, user_id, alert_num):
+        self.relay_list[alert_num - 1].delete_user(user_id)

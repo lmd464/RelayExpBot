@@ -3,6 +3,7 @@ class RelayEntity:
         self.channel = channel
         self.first_minute = first_minute
         self.second_minute = second_minute
+        self.user_id_list = []  # 멘션으로 알릴 유저 리스트
 
     def stringify(self):
         string = str(self.channel) + "ch " + \
@@ -18,5 +19,24 @@ class RelayEntity:
 
     def get_second_minute(self):
         return self.second_minute
+
+
+
+    # 멘션할 유저 추가/삭제/반환
+    def add_user(self, user_id):
+        self.user_id_list.append(user_id)
+        self.user_id_list = list(set(self.user_id_list))
+
+    def delete_user(self, user_id):
+        if user_id not in self.user_id_list:
+            return
+        else:
+            self.user_id_list.remove(user_id)
+
+    def get_user(self):
+        return self.user_id_list
+
+
+
 
 
