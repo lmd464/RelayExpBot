@@ -44,6 +44,7 @@ async def on_message(message):
         choice_list = message.content.split(" vs ")
         if len(choice_list) >= 2:
             res_msg = choice_list[randint(0, len(choice_list) - 1)]
+            await message.channel.send(res_msg)
 
 
     # 파싱 결과를 "메시지가 온 채널"로 전송 (릴경명령 등 일반적인 명령)
