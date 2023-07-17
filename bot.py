@@ -42,7 +42,7 @@ async def on_message(message):
     # 파싱 결과를 "메시지가 온 채널"로 전송 (릴경명령 등 일반적인 명령)
     # 명령어가 아닌 경우는 Controller 에서 걸러져 공백 스트링이 리턴됨
     # 공백 스트링이 리턴될 경우 아무것도 하지 않음
-    else:
+    elif message.content.startswith('!'):
         res_msg = c.parse(message)
         if res_msg == "" or res_msg is None:
             return

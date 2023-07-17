@@ -19,12 +19,23 @@ class Controller:
             command_type = splitted[0]                      # splitted[0] : 명령 종류
 
 
+            # Init : 알림 띄울 채널 초기설정, 알림
+            if command_type == "!채널설정" or command_type == "!ㅊ":
+                if len(splitted) == 1:
+                    self.relay_exp_timer.set_relay_channel(message.channel.id)
+                    return message.channel.name + " 로 알림이 설정되었습니다.\n"
+
+            elif self.relay_exp_timer.get_relay_channel() == -1:
+                return "초기설정 : 알림받을 채팅채널을 설정해주세요. (!채널설정 / !ㅊ 입력)"
+
+
             ###################
             #      릴경명령     #
             ###################
 
             # 1. 등록
-            if command_type == '!등록' or command_type == "!ㄷ":
+            elif command_type == '!등록' or command_type == "!ㄷ":
+
                 if len(splitted) < 3:
                     return "인자가 충분하지 않습니다.\n" + ">>  !등록 [채널] [시간1]/[시간2]\n"
 
@@ -46,10 +57,6 @@ class Controller:
                     second_minute < 0 or second_minute > 59:
                     return "유효한 시간을 입력해주세요.\n" + ">>  !등록 [채널] [시간1]/[시간2]\n"
 
-                if self.relay_exp_timer.get_relay_channel() == -1:
-                    return "알림받을 채널을 설정해주세요. (!채널설정 / !ㅊ 입력)"
-
-
                 # 등록
                 return self.relay_exp_timer.register(channel, first_minute, second_minute) + self.relay_exp_timer.print()
 
@@ -58,19 +65,22 @@ class Controller:
             elif command_type == '!삭제' or command_type == '!ㅅ':
 
                 if len(splitted) < 2:
-                    return "인자가 충분하지 않습니다.\n" + ">>  !삭제 [번호]\n"
+                    return "인자가 충분하지 않습니다.\n" + ">>  !삭제 [번호]\n" + \
+                            self.relay_exp_timer.print()
+
                 delete_number = splitted[1]                 # splitted 1번 : 삭제할 번호
 
                 # 숫자가 아니면 걸러내기
                 if delete_number.isnumeric() is not True:
-                    return "정확한 숫자를 넣어주세요.\n" + ">>  !삭제 [번호]\n"
+                    return "번호 부분에 숫자를 넣어주세요.\n" + ">>  !삭제 [번호]\n"
 
                 # 숫자로 변환
                 delete_number = int(delete_number)
 
                 # 인덱스 범위 검사
                 if delete_number < 1 or delete_number > len(self.relay_exp_timer.relay_list):
-                    return "유효한 번호를 입력해주세요.\n" + ">>  !삭제 [번호]\n"
+                    return "유효한 범위의 번호를 입력해주세요.\n" + ">>  !삭제 [번호]\n" + \
+                            self.relay_exp_timer.print()
 
                 # 삭제
                 return self.relay_exp_timer.delete(delete_number) + self.relay_exp_timer.print()
@@ -87,8 +97,7 @@ class Controller:
 
             # 5. 사용법 출력
             elif command_type == "!사용법" or command_type == "!ㅁㄹ":
-                return "(초기 설정 : !채널설정 / !ㅊ 으로 알림을 출력할 채널을 설정해주세요)\n" + \
-                       "**---------- 릴경알림 사용법 ----------**\n" + \
+                return "**---------- 릴경알림 사용법 ----------**\n" + \
                        "- !릴경\n" + \
                        "- !등록 [채널] [분1]/[분2]\n" + \
                        "- !삭제 [번호]\n" + \
@@ -103,10 +112,10 @@ class Controller:
                     user_id_to_alert = str(message.author.id)
                     self.relay_exp_timer.add_user(user_id_to_alert, int(splitted[1]))
 
-                    return message.author.name + " 에게 알림 설정되었습니다.\n"
+                    return message.author.name + " 에게 알림 설정되었습니다. (" + \
+                        self.relay_exp_timer.get_relay_entity(int(splitted[1])).stringify() + ")\n"
                 else:
-                    return "잘못된 명령입니다.\n" + ">>  !알림 [번호]" + \
-                            "\n------------------------------\n" + \
+                    return "잘못된 명령입니다.\n" + ">>  !알림 [번호]\n" + \
                             self.relay_exp_timer.print()
 
             elif command_type == "!알림해제" or command_type == "!ㅎ":
@@ -117,17 +126,8 @@ class Controller:
 
                     return message.author.name + " 에게 알림 해제되었습니다.\n"
                 else:
-                    return "잘못된 명령입니다.\n" + ">>  !알림해제 [번호]" + \
-                            "\n------------------------------\n" + \
+                    return "잘못된 명령입니다.\n" + ">>  !알림해제 [번호]\n" + \
                             self.relay_exp_timer.print()
-
-
-            # 7. 알림 띄울 채널 초기설정
-            elif command_type == "!채널설정" or command_type == "!ㅊ":
-                if len(splitted) == 1:
-                    self.relay_exp_timer.set_relay_channel(message.channel.id)
-                    return message.channel.name + " 로 알림이 설정되었습니다.\n"
-
 
             ##################
             #     부가기능     #

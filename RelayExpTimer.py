@@ -8,10 +8,16 @@ class RelayExpTimer:
         self.relay_list = []
         self.relay_channel_id = -1  # 알림 채널 설정
 
+    # RelayEntity의 Getter
+    def get_relay_entity(self, num):
+        return self.relay_list[num - 1]
     def get_relay_channel(self):
         return self.relay_channel_id
     def set_relay_channel(self, relay_channel_id):
         self.relay_channel_id = int(relay_channel_id)
+
+
+
 
 
     # 등록 : !등록 [채널] [분1]/[분2]
@@ -103,3 +109,4 @@ class RelayExpTimer:
 
     def delete_user(self, user_id, alert_num):
         self.relay_list[alert_num - 1].delete_user(user_id)
+
