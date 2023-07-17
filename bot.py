@@ -39,6 +39,14 @@ async def on_message(message):
         await message.channel.send("종료합니다.")
         sys.exit("종료합니다.")
 
+    # vs
+    elif " vs " in message.content:
+        choice_list = message.content.split(" vs ")
+        if len(choice_list) >= 2:
+            return choice_list[randint(0, len(choice_list) - 1)]
+        else:
+            return ""
+
     # 파싱 결과를 "메시지가 온 채널"로 전송 (릴경명령 등 일반적인 명령)
     # 명령어가 아닌 경우는 Controller 에서 걸러져 공백 스트링이 리턴됨
     # 공백 스트링이 리턴될 경우 아무것도 하지 않음

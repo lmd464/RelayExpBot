@@ -129,17 +129,7 @@ class Controller:
                     return "잘못된 명령입니다.\n" + ">>  !알림해제 [번호]\n" + \
                             self.relay_exp_timer.print()
 
-            ##################
-            #     부가기능     #
-            ##################
 
-            # vs
-            elif " vs " in message.content:
-                choice_list = message.content.split(" vs ")
-                if len(choice_list) >= 2:
-                    return choice_list[randint(0, len(choice_list) - 1)]
-                else:
-                    return ""
 
         # 명령 종류는 맞으나, 인자 개수를 잘못 적은 경우
         except IndexError as e:
