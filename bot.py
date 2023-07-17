@@ -60,12 +60,11 @@ async def relay_exp_alert_bg():
         res_msg = c.relay_exp_notify()
 
         # 릴경 항목을 "특정 채널 (채팅채널)" 로 전송 (릴경알림)
-        if res_msg != "":   # 시간이 안됐을 경우 빈 문자열 받음, 알림X
+        if res_msg != "":
             channel = client.get_channel(c.get_relay_channel())
-            res_msg = "**[ 릴경알림 ]**\n" + res_msg
             await channel.send(res_msg)     # 메시지 보냄
             await asyncio.sleep(1)
-        else:
+        else: # 시간이 안됐을 경우 빈 문자열 받음, 알림X
             await asyncio.sleep(0.01)
 
 client.run(token)

@@ -24,14 +24,14 @@ class RelayExpTimer:
         # 정렬
         self.relay_list = sorted(self.relay_list, key=lambda entity: entity.first_minute)
 
-        return "등록 완료 되었습니다.\n" + self.print()
+        return "등록 완료 되었습니다.\n"
 
     # 삭제 : !삭제 [번호]
     def delete(self, number):
         if len(self.relay_list) == 0:
             return "삭제할 항목이 없습니다.\n"
         self.relay_list.pop(number - 1)
-        return "삭제 완료되었습니다.\n" + self.print()
+        return "삭제 완료되었습니다.\n"
 
     # 전체삭제 : !전체삭제
     def delete_all(self):
@@ -54,7 +54,7 @@ class RelayExpTimer:
 
 
     # 현재 시간이 저장된 시간의 1분 전이라면 해당 정보 스트링을 반환한다.
-    # 현재 시간(분, 초) 을 받아와서, Relay List 에 있는 Entity 들을 탐색하며
+    # 현재 시간(분, 초) 을 구하고, Relay List 에 있는 Entity 들을 탐색하며
     # 알려야 하는 요소가 있으면 현재 시간과 저장된 시간에 대한 String 반환
     # 없으면 빈 문자열 반환
     def notify(self):
@@ -68,6 +68,12 @@ class RelayExpTimer:
 
         # 알릴 정보가 있고, 채널이 설정된 상태
         else:
+            header = "**----------[ 릴경알림 ]----------**\n"
+            footer = "**-------------------------------**\n"
+            str_time = strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n', current_time)
+            concat = header + str_time
+            have_to_notify = False
+
             for relay_entity in self.relay_list:
 
                 # 첫 시간이 00분일 때 1분 전 / # 첫번째 시간의 1분 전 /  # 두번째 시간의 1분 전
@@ -75,19 +81,21 @@ class RelayExpTimer:
                         (current_min == relay_entity.get_first_minute() - 1 and current_sec == 1) or \
                         (current_min == relay_entity.get_second_minute() - 1 and current_sec == 1):
 
-                    str_time = strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n', current_time)
                     saved_entity = "** ⇒ " + relay_entity.stringify() + "**\n"
                     user_to_mention = "<@{0}>\n".format("> <@".join(relay_entity.get_user())) \
                         if len(relay_entity.get_user()) > 0 else ""
-                    info_str = "(멘션알림 : !알림 [번호] / !알림해제 [번호])\n"
-                    return str_time + saved_entity + user_to_mention + info_str
+
+                    concat += saved_entity + user_to_mention
+                    have_to_notify = True
+                    continue
 
                 # 알릴 시간이 아님. 루프
                 else:
                     # print(strftime('[Debug] %I시 %M분 %S초 %p\n', current_time))
                     continue
 
-            return ""
+            res = (concat + footer) if have_to_notify else ""
+            return res
 
     # 멘션할 유저 추가/삭제/반환 : 선택한 채널의 RelayEntity 에서 수행
     def add_user(self, user_id, alert_num):
