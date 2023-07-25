@@ -95,11 +95,11 @@ class Controller:
             # 5. 사용법 출력
             elif command_type == "!사용법" or command_type == "!ㅁㄹ":
                 return "**---------- 릴경알림 사용법 ----------**\n" + \
-                       "- !릴경   (!ㄹ)\n" + \
-                       "- !등록 [채널] [분1]/[분2]   (!ㄷ)\n" + \
-                       "- !삭제 [번호]   (!ㅅ)\n" + \
-                       "- !전체삭제   (!ㅈ)\n" + \
-                       "- !알림 [번호]  /  !알림해제   (!ㅇ, !ㅎ)\n\n" + \
+                       "- !릴경 \n" + \
+                       "- !등록 [채널] [분1]/[분2] \n" + \
+                       "- !삭제 [번호] \n" + \
+                       "- !전체삭제 \n" + \
+                       "- !알림 [번호]  /  !알림해제 \n\n" + \
                        "https://www.afreecatv.com/total_search.html?szLocation=main&szSearchType=total&szKeyword=%EB%A3%A8%EB%82%98%20%EB%A6%B4%EA%B2%BD" + "\n"
 
             # 6. 멘션 알림
