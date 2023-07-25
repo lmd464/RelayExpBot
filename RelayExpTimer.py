@@ -30,14 +30,14 @@ class RelayExpTimer:
         # 정렬
         self.relay_list = sorted(self.relay_list, key=lambda entity: entity.first_minute)
 
-        return "등록 완료 되었습니다. (" + relay_entity.stringify() + ")\n"
+        return "등록 완료 되었습니다.\n"
 
     # 삭제 : !삭제 [번호]
     def delete(self, number):
         if len(self.relay_list) == 0:
             return "삭제할 항목이 없습니다.\n"
         deleted_entity = self.relay_list.pop(number - 1)
-        return "삭제 완료되었습니다. (" + deleted_entity.stringify() + ")\n"
+        return "삭제 완료되었습니다.\n"
 
     # 전체삭제 : !전체삭제
     def delete_all(self):

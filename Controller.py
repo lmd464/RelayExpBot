@@ -20,7 +20,7 @@ class Controller:
             if command_type == "!채널설정" or command_type == "!ㅊ":
                 if len(splitted) == 1:
                     self.relay_exp_timer.set_relay_chat_channel(message.channel.id)
-                    return message.channel.name + " 로 알림이 설정되었습니다.\n"
+                    return message.channel.name + " 채널로 알림이 설정되었습니다.\n"
 
             elif self.relay_exp_timer.get_relay_chat_channel() == -1:
                 return "초기설정 : 알림받을 채팅채널을 설정해주세요. (!채널설정 / !ㅊ 입력)"
