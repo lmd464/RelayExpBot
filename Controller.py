@@ -120,8 +120,7 @@ class Controller:
                 user_id_to_unalert = str(message.author.id)
                 self.relay_exp_timer.delete_user(user_id_to_unalert)
 
-                return message.author.name + " 에게 전체 알림이 해제되었습니다.\n" + \
-                       self.relay_exp_timer.print()
+                return message.author.name + " 에게 전체 알림이 해제되었습니다.\n"
 
 
 
