@@ -6,15 +6,15 @@ class RelayExpTimer:
 
     def __init__(self):
         self.relay_list = []
-        self.relay_channel_id = -1  # 알림 채널 설정
+        self.relay_chat_channel_id = -1  # 알림 채널 설정
 
     # RelayEntity의 Getter
     def get_relay_entity(self, num):
         return self.relay_list[num - 1]
-    def get_relay_channel(self):
-        return self.relay_channel_id
-    def set_relay_channel(self, relay_channel_id):
-        self.relay_channel_id = int(relay_channel_id)
+    def get_relay_chat_channel(self):
+        return self.relay_chat_channel_id
+    def set_relay_chat_channel(self, relay_chat_channel_id):
+        self.relay_chat_channel_id = int(relay_chat_channel_id)
 
 
 
@@ -30,14 +30,14 @@ class RelayExpTimer:
         # 정렬
         self.relay_list = sorted(self.relay_list, key=lambda entity: entity.first_minute)
 
-        return "등록 완료 되었습니다.\n"
+        return "등록 완료 되었습니다. (" + relay_entity.stringify() + ")\n"
 
     # 삭제 : !삭제 [번호]
     def delete(self, number):
         if len(self.relay_list) == 0:
             return "삭제할 항목이 없습니다.\n"
-        self.relay_list.pop(number - 1)
-        return "삭제 완료되었습니다.\n"
+        deleted_entity = self.relay_list.pop(number - 1)
+        return "삭제 완료되었습니다. (" + deleted_entity.stringify() + ")\n"
 
     # 전체삭제 : !전체삭제
     def delete_all(self):
@@ -69,13 +69,13 @@ class RelayExpTimer:
         current_sec = current_time.tm_sec
 
         # 알릴 정보가 없거나, 채널이 설정되지 않은 상태 :
-        if len(self.relay_list) == 0 or self.relay_channel_id == -1:
+        if len(self.relay_list) == 0 or self.relay_chat_channel_id == -1:
             return ""
 
         # 알릴 정보가 있고, 채널이 설정된 상태
         else:
             header = "**----------[ 릴경알림 ]----------**\n"
-            footer = "**-------------------------------**\n"
+
             str_time = strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n', current_time)
             concat = header + str_time
             have_to_notify = False
@@ -100,13 +100,15 @@ class RelayExpTimer:
                     # print(strftime('[Debug] %I시 %M분 %S초 %p\n', current_time))
                     continue
 
-            res = (concat + footer) if have_to_notify else ""
+            res = concat if have_to_notify else ""
             return res
 
-    # 멘션할 유저 추가/삭제/반환 : 선택한 채널의 RelayEntity 에서 수행
+    # 멘션할 유저 추가 : 선택한 채널의 RelayEntity 에서 수행
     def add_user(self, user_id, alert_num):
         self.relay_list[alert_num - 1].add_user(user_id)
 
-    def delete_user(self, user_id, alert_num):
-        self.relay_list[alert_num - 1].delete_user(user_id)
+    # 멘션할 유저 삭제 : RelayExpTimer의 모든 Entity들 탐색하며 수행
+    def delete_user(self, user_id):
+        for entity in self.relay_list:
+            entity.delete_user(user_id)
 

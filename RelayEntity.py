@@ -1,14 +1,16 @@
 class RelayEntity:
     def __init__(self, channel, first_minute, second_minute):
-        self.channel = channel
-        self.first_minute = first_minute
-        self.second_minute = second_minute
+        self.channel = channel                  # String
+        self.first_minute = first_minute        # Int
+        self.second_minute = second_minute      # Int
         self.user_id_list = []  # 멘션으로 알릴 유저 리스트
 
     def stringify(self):
-        string = str(self.channel) + "ch " + \
+        string = self.channel + \
+                 ("ch  -  " if self.channel.isnumeric() else "  -  ") + \
                  str(self.first_minute) + "분, " + \
                  str(self.second_minute) + "분"
+
         return string
 
     def get_channel(self):
