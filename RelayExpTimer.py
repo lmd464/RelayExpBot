@@ -75,6 +75,7 @@ class RelayExpTimer:
         # 알릴 정보가 있고, 채널이 설정된 상태
         else:
             header = "**----------[ 릴경알림 ]----------**\n"
+            footer = "**-------------------------------**\n"
 
             str_time = strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n', current_time)
             concat = header + str_time
@@ -100,7 +101,7 @@ class RelayExpTimer:
                     # print(strftime('[Debug] %I시 %M분 %S초 %p\n', current_time))
                     continue
 
-            res = concat if have_to_notify else ""
+            res = concat + footer if have_to_notify else ""
             return res
 
     # 멘션할 유저 추가 : 선택한 채널의 RelayEntity 에서 수행
