@@ -57,7 +57,7 @@ class RelayExpTimer:
         res_msg = ""
         if len(self.relay_list) != 0:
             for entity in self.relay_list:
-                res_msg += (str(num) + " )  " + entity.stringify()) + entity.get_elapsed_str() + "\n"
+                res_msg += (str(num) + ") " + entity.stringify()) + entity.get_elapsed_str() + "\n"
                 num += 1
             return res_msg
         else:

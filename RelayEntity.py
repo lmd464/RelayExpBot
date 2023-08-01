@@ -11,7 +11,7 @@ class RelayEntity:
 
     def stringify(self):
         string = self.channel + \
-                 ("ch  -  " if self.channel.isnumeric() else "  -  ") + \
+                 ("ch - " if self.channel.isnumeric() else "  -  ") + \
                  str(self.first_minute) + "분, " + \
                  str(self.second_minute) + "분"
 
@@ -19,7 +19,7 @@ class RelayEntity:
 
     # 등록 후 경과시간 계산하여 출력
     def get_elapsed_str(self):
-        return "   (" + str(int((datetime.now() - self.register_time).seconds / 60)) + "분 전 등록)"
+        return " (" + str(int((datetime.now() - self.register_time).seconds / 60)) + "분 전 등록)"
 
 
     def get_channel(self):

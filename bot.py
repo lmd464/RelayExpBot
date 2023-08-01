@@ -21,6 +21,8 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 c = Controller()
 
+wrapper_h = "```\n"
+wrapper_f = "\n```"
 
 @client.event
 async def on_ready():
@@ -37,7 +39,7 @@ async def on_message(message):
 
     # 종료 : 메시지가 온 채널로 보냄
     if message.content.startswith('!kill'):
-        await message.channel.send(">>> 종료합니다.")
+        await message.channel.send(wrapper_h + "종료합니다." + wrapper_f)
         sys.exit("종료합니다.")
 
     # vs
@@ -45,7 +47,7 @@ async def on_message(message):
         choice_list = message.content.split(" vs ")
         if len(choice_list) >= 2:
             res_msg = choice_list[randint(0, len(choice_list) - 1)]
-            await message.channel.send(">>> " + res_msg)
+            await message.channel.send(wrapper_h + res_msg + wrapper_f)
 
 
     # 파싱 결과를 "메시지가 온 채널"로 전송 (릴경명령 등 일반적인 명령)
@@ -56,7 +58,7 @@ async def on_message(message):
         if res_msg == "" or res_msg is None:
             return
 
-        await message.channel.send(">>> " + res_msg)
+        await message.channel.send(wrapper_h + res_msg + wrapper_f)
 
 
 
