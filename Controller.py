@@ -1,6 +1,5 @@
 from RelayExpTimer import *  # 릴경봇 모듈
 import locale
-from random import randint
 
 
 class Controller:

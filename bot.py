@@ -3,6 +3,7 @@ from discord.ext import tasks
 from Controller import *
 import asyncio
 import sys
+from random import randint
 
 ''' 
 << Token, 채널 ID를 info.txt에서 읽어옴 >>
@@ -36,7 +37,7 @@ async def on_message(message):
 
     # 종료 : 메시지가 온 채널로 보냄
     if message.content.startswith('!kill'):
-        await message.channel.send("종료합니다.")
+        await message.channel.send(">>> 종료합니다.")
         sys.exit("종료합니다.")
 
     # vs
@@ -44,7 +45,7 @@ async def on_message(message):
         choice_list = message.content.split(" vs ")
         if len(choice_list) >= 2:
             res_msg = choice_list[randint(0, len(choice_list) - 1)]
-            await message.channel.send(res_msg)
+            await message.channel.send(">>> " + res_msg)
 
 
     # 파싱 결과를 "메시지가 온 채널"로 전송 (릴경명령 등 일반적인 명령)
@@ -55,7 +56,7 @@ async def on_message(message):
         if res_msg == "" or res_msg is None:
             return
 
-        await message.channel.send(res_msg)
+        await message.channel.send(">>> " + res_msg)
 
 
 
@@ -70,9 +71,11 @@ async def relay_exp_alert_bg():
         # 릴경 항목을 "특정 채널 (채팅채널)" 로 전송 (릴경알림)
         if res_msg != "":
             channel = client.get_channel(c.get_relay_chat_channel())
-            await channel.send(res_msg)     # 메시지 보냄
+            await channel.send(">>> " + res_msg)     # 메시지 보냄
             await asyncio.sleep(1)
-        else: # 시간이 안됐을 경우 빈 문자열 받음, 알림X
+
+        # 시간이 안됐을 경우 빈 문자열 받음, 알림X
+        else:
             await asyncio.sleep(0.01)
 
 client.run(token)

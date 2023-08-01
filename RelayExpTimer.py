@@ -1,5 +1,5 @@
 from RelayEntity import *
-from time import *
+from datetime import datetime
 
 
 class RelayExpTimer:
@@ -24,7 +24,12 @@ class RelayExpTimer:
     # 시간 순서대로 정렬시킴
     # 인덱스에 의한 순번 자동 부여
     def register(self, channel, first_minute, second_minute):
-        relay_entity = RelayEntity(channel, first_minute, second_minute)
+
+        # 첫 시간이 항상 작게 함
+        if first_minute > second_minute:
+            first_minute, second_minute = second_minute, first_minute
+
+        relay_entity = RelayEntity(channel, first_minute, second_minute, datetime.now())
         self.relay_list.append(relay_entity)
 
         # 정렬
@@ -52,7 +57,7 @@ class RelayExpTimer:
         res_msg = ""
         if len(self.relay_list) != 0:
             for entity in self.relay_list:
-                res_msg += (str(num) + " )  " + entity.stringify()) + "\n"
+                res_msg += (str(num) + " )  " + entity.stringify()) + entity.get_elapsed_str() + "\n"
                 num += 1
             return res_msg
         else:
@@ -64,9 +69,9 @@ class RelayExpTimer:
     # 알려야 하는 요소가 있으면 현재 시간과 저장된 시간에 대한 String 반환
     # 없으면 빈 문자열 반환
     def notify(self):
-        current_time = localtime()
-        current_min = current_time.tm_min
-        current_sec = current_time.tm_sec
+        current_time = datetime.now()
+        current_min = current_time.minute
+        current_sec = current_time.second
 
         # 알릴 정보가 없거나, 채널이 설정되지 않은 상태 :
         if len(self.relay_list) == 0 or self.relay_chat_channel_id == -1:
@@ -74,35 +79,36 @@ class RelayExpTimer:
 
         # 알릴 정보가 있고, 채널이 설정된 상태
         else:
-            header = "**----------[ 릴경알림 ]----------**\n"
-            footer = "**-------------------------------**\n"
+            #header = "**----------[ 릴경알림 ]----------**\n"
+            #footer = "**-------------------------------**\n"
 
-            str_time = strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n', current_time)
-            concat = header + str_time
+            str_time = current_time.strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n')
+            res = str_time
             have_to_notify = False
 
             for relay_entity in self.relay_list:
 
+                # 알릴 시간과 현재시간이 일치할 시 수행
                 # 첫 시간이 00분일 때 1분 전 / # 첫번째 시간의 1분 전 /  # 두번째 시간의 1분 전
                 if (current_min == 59 and relay_entity.get_first_minute() == 0 and current_sec == 1) or \
                         (current_min == relay_entity.get_first_minute() - 1 and current_sec == 1) or \
                         (current_min == relay_entity.get_second_minute() - 1 and current_sec == 1):
 
-                    saved_entity = "** ⇒ " + relay_entity.stringify() + "**\n"
+                    # 저장된 시간정보 출력
+                    saved_entity = "** ⇒ " + relay_entity.stringify() + relay_entity.get_elapsed_str() + "**\n"
+
+                    # 멘션할 유저들 붙임
                     user_to_mention = "<@{0}>\n".format("> <@".join(relay_entity.get_user())) \
                         if len(relay_entity.get_user()) > 0 else ""
 
-                    concat += saved_entity + user_to_mention
+                    res += (saved_entity + user_to_mention)
                     have_to_notify = True
                     continue
 
-                # 알릴 시간이 아님. 루프
-                else:
-                    # print(strftime('[Debug] %I시 %M분 %S초 %p\n', current_time))
-                    continue
+            res = res if have_to_notify else ""
 
-            res = concat + footer if have_to_notify else ""
             return res
+
 
     # 멘션할 유저 추가 : 선택한 채널의 RelayEntity 에서 수행
     def add_user(self, user_id, alert_num):
