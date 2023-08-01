@@ -18,8 +18,6 @@ class RelayExpTimer:
 
 
 
-
-
     # 등록 : !등록 [채널] [분1]/[분2]
     # 시간 순서대로 정렬시킴
     # 인덱스에 의한 순번 자동 부여
@@ -82,8 +80,11 @@ class RelayExpTimer:
             #header = "**----------[ 릴경알림 ]----------**\n"
             #footer = "**-------------------------------**\n"
 
-            str_time = current_time.strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n')
-            res = str_time
+            wrapper_h = "```\n"
+            wrapper_f = "\n```\n"
+
+            str_time = current_time.strftime('※ 현재 시각 : %I시 %M분 %S초 %p\n')
+            res = wrapper_h + str_time
             have_to_notify = False
 
             for relay_entity in self.relay_list:
@@ -95,13 +96,13 @@ class RelayExpTimer:
                         (current_min == relay_entity.get_second_minute() - 1 and current_sec == 1):
 
                     # 저장된 시간정보 출력
-                    saved_entity = "** ⇒ " + relay_entity.stringify() + relay_entity.get_elapsed_str() + "**\n"
+                    saved_entity = "⇒ " + relay_entity.stringify() + relay_entity.get_elapsed_str() + "\n"
 
                     # 멘션할 유저들 붙임
                     user_to_mention = "<@{0}>\n".format("> <@".join(relay_entity.get_user())) \
                         if len(relay_entity.get_user()) > 0 else ""
 
-                    res += (saved_entity + user_to_mention)
+                    res += (saved_entity + wrapper_f + user_to_mention)
                     have_to_notify = True
                     continue
 
