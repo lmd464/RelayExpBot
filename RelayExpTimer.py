@@ -79,9 +79,6 @@ class RelayExpTimer:
 
         # 알릴 정보가 있고, 채널이 설정된 상태
         else:
-            #header = "**----------[ 릴경알림 ]----------**\n"
-            #footer = "**-------------------------------**\n"
-
             str_time = current_time.strftime('**※ 현재 시각 : %I시 %M분 %S초 %p**\n')
             res = str_time
             have_to_notify = False

@@ -22,7 +22,7 @@ client = discord.Client(intents=intents)
 c = Controller()
 
 wrapper_h = "```\n"
-wrapper_f = "\n```"
+wrapper_f = "```"
 
 @client.event
 async def on_ready():
@@ -46,8 +46,8 @@ async def on_message(message):
     elif " vs " in message.content:
         choice_list = message.content.split(" vs ")
         if len(choice_list) >= 2:
-            res_msg = choice_list[randint(0, len(choice_list) - 1)]
-            await message.channel.send(wrapper_h + res_msg + wrapper_f)
+            res_msg = wrapper_h + choice_list[randint(0, len(choice_list) - 1)] + wrapper_f
+            await message.channel.send(res_msg)
 
 
     # 파싱 결과를 "메시지가 온 채널"로 전송 (릴경명령 등 일반적인 명령)
@@ -57,8 +57,13 @@ async def on_message(message):
         res_msg = c.parse(message)
         if res_msg == "" or res_msg is None:
             return
+        res_msg = wrapper_h + res_msg + wrapper_f
 
-        await message.channel.send(wrapper_h + res_msg + wrapper_f)
+        dummy = wrapper_h + wrapper_f
+
+        # 링크를 표시할 경우, 이를 wrapper에서 분리하기 위해 생긴 꼬투리를 제거 (```\n```)
+        res_msg = res_msg if dummy not in res_msg else res_msg.split(dummy)[0]
+        await message.channel.send(res_msg)
 
 
 

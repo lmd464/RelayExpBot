@@ -88,18 +88,24 @@ class Controller:
 
             # 4. 출력
             elif command_type == '!릴경' or command_type == '!ㄹ':
-                link = "등록을 진행해주세요.\n" + "https://www.afreecatv.com/total_search.html?szLocation=main&szSearchType=total&szKeyword=%EB%A3%A8%EB%82%98%20%EB%A6%B4%EA%B2%BD" + "\n"
+                wrapper = "```\n"
+                link = "등록을 진행해주세요.\n" + \
+                       wrapper + "https://www.afreecatv.com/total_search.html?szLocation=main&szSearchType=total&szKeyword=%EB%A3%A8%EB%82%98%20%EB%A6%B4%EA%B2%BD\n" + wrapper
+                       # 끝에 생기는 wrapper 꼬투리는 bot 모듈에서 제거
+
                 return self.relay_exp_timer.print() + (link if len(self.relay_exp_timer.relay_list) == 0 else "")
 
             # 5. 사용법 출력
             elif command_type == "!사용법" or command_type == "!ㅁㄹ":
+                wrapper = "```\n"
                 return "---------- 릴경알림 사용법 ----------\n" + \
                        "- !릴경 \n" + \
                        "- !등록 [채널] [분1]/[분2] \n" + \
                        "- !삭제 [번호] \n" + \
                        "- !전체삭제 \n" + \
-                       "- !알림 [번호]  /  !알림해제 \n\n" + \
-                       "https://www.afreecatv.com/total_search.html?szLocation=main&szSearchType=total&szKeyword=%EB%A3%A8%EB%82%98%20%EB%A6%B4%EA%B2%BD" + "\n"
+                       "- !알림 [번호]  /  !알림해제 \n" + \
+                       wrapper + "https://www.afreecatv.com/total_search.html?szLocation=main&szSearchType=total&szKeyword=%EB%A3%A8%EB%82%98%20%EB%A6%B4%EA%B2%BD\n" + wrapper
+                       # 끝에 생기는 wrapper 꼬투리는 bot 모듈에서 제거
 
             # 6. 멘션 알림
             # 인자 개수 불일치, 숫자아닌 인자, 인덱스 벗어나는 인자 거름
