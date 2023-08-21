@@ -11,6 +11,8 @@ class RelayExpTimer:
     # RelayEntity의 Getter
     def get_relay_entity(self, num):
         return self.relay_list[num - 1]
+    def get_relay_list(self, num):
+        return self.relay_list
     def get_relay_chat_channel(self):
         return self.relay_chat_channel_id
     def set_relay_chat_channel(self, relay_chat_channel_id):

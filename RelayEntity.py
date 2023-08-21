@@ -20,6 +20,8 @@ class RelayEntity:
     # 등록 후 경과시간 계산하여 출력
     def get_elapsed_str(self):
         return " (" + str(int((datetime.now() - self.register_time).seconds / 60)) + "분 전 등록)"
+    def get_elapsed_num(self):
+        return int((datetime.now() - self.register_time).seconds / 60)
 
 
     def get_channel(self):

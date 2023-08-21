@@ -78,11 +78,29 @@ async def relay_exp_alert_bg():
         # 릴경 항목을 "특정 채널 (채팅채널)" 로 전송 (릴경알림)
         if res_msg != "":
             channel = client.get_channel(c.get_relay_chat_channel())
-            await channel.send(">>> " + res_msg)     # 메시지 보냄
+            await channel.send(">>> " + res_msg)     # 메시지 보냄 (>>> : 강조 마크업)
             await asyncio.sleep(1)
 
         # 시간이 안됐을 경우 빈 문자열 받음, 알림X
         else:
             await asyncio.sleep(0.01)
+
+
+@tasks.loop(seconds=60)
+async def delete_outdated():
+    await client.wait_until_ready()
+
+    while not client.is_closed():
+        channel = client.get_channel(c.get_relay_chat_channel())        # 릴경채널 받아옴
+
+        # 등록된 리스트 받아와서 16시간 이상 지난 항목들 자동 제거
+        current_list = c.relay_exp_timer.get_relay_list()
+        for ent in current_list:
+
+            elapsed_time = ent.get_elapsed_num()      # 경과 시간
+            if elapsed_time >= 960:
+                current_list.remove(ent)
+                await channel.send(wrapper_h + "[!] 16시간 이상 경과된 항목들을 자동으로 삭제하였습니다.\n" + wrapper_f)
+
 
 client.run(token)
