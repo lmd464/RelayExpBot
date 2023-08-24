@@ -104,7 +104,7 @@ class Controller:
                        "- !삭제 [번호] \n" + \
                        "- !전체삭제 \n" + \
                        "- !알림 [번호]  /  !알림해제 \n" + \
-                       "\n(16시간 이상 지난 항목은 자동으로 삭제됩니다.)" + \
+                       "\n(12시간 이상 지난 항목은 자동으로 삭제됩니다.)" + \
                        wrapper + "https://www.afreecatv.com/total_search.html?szLocation=main&szSearchType=total&szKeyword=%EB%A3%A8%EB%82%98%20%EB%A6%B4%EA%B2%BD\n" + wrapper
                        # 끝에 생기는 wrapper 꼬투리는 bot 모듈에서 제거
 
@@ -142,3 +142,7 @@ class Controller:
     # RelayExpTimer의 알림채널 id Getter 호출 : 채팅채널 id를 넘겨서, bot에서 알림 전송
     def get_relay_chat_channel(self):
         return self.relay_exp_timer.get_relay_chat_channel()
+
+    # RelayExpTimer의 만료항목 제거 메소드 호출
+    def delete_outdated(self):
+        return self.relay_exp_timer.delete_outdated()

@@ -11,15 +11,10 @@ class RelayExpTimer:
     # RelayEntity의 Getter
     def get_relay_entity(self, num):
         return self.relay_list[num - 1]
-    def get_relay_list(self, num):
-        return self.relay_list
     def get_relay_chat_channel(self):
         return self.relay_chat_channel_id
     def set_relay_chat_channel(self, relay_chat_channel_id):
         self.relay_chat_channel_id = int(relay_chat_channel_id)
-
-
-
 
 
     # 등록 : !등록 [채널] [분1]/[분2]
@@ -117,4 +112,28 @@ class RelayExpTimer:
     def delete_user(self, user_id):
         for entity in self.relay_list:
             entity.delete_user(user_id)
+
+
+    # 등록된 리스트에서 12시간 이상 지난 항목들 자동 제거 : bot 모듈에서 백그라운드 작업으로 수행
+    def delete_outdated(self):
+        res = ""
+        have_to_notify = False          # 하나라도 만료된 항목이 있으면 True
+
+        # 리스트 목록을 순회하며 만료된 것들을 실제 리스트에서 삭제
+        temp_list = self.relay_list[:]     # 임시 리스트 복사 : 목록을 나타냄
+        for entity in temp_list:
+            elapsed_time = entity.get_elapsed_num()    # 경과 시간
+            entity_info = entity.stringify()           # 삭제할 정보
+            if elapsed_time >= 720:
+                self.relay_list.remove(entity)
+                res += entity_info + "\n"
+                have_to_notify = True
+
+        if have_to_notify:
+            return "12시간 이상 경과된 항목들을 자동으로 삭제하였습니다.\n" + res
+
+        else:
+            return ""
+
+
 

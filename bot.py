@@ -28,6 +28,7 @@ wrapper_f = "```"
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     relay_exp_alert_bg.start()
+    delete_outdated_bg.start()
 
 
 @client.event
@@ -75,7 +76,7 @@ async def relay_exp_alert_bg():
     while not client.is_closed():
         res_msg = c.relay_exp_notify()
 
-        # 릴경 항목을 "특정 채널 (채팅채널)" 로 전송 (릴경알림)
+        # 릴경 항목을 특정 채널로 전송 (설정한 알림채널)
         if res_msg != "":
             channel = client.get_channel(c.get_relay_chat_channel())
             await channel.send(">>> " + res_msg)     # 메시지 보냄 (>>> : 강조 마크업)
@@ -86,21 +87,21 @@ async def relay_exp_alert_bg():
             await asyncio.sleep(0.01)
 
 
-@tasks.loop(seconds=60)
-async def delete_outdated():
+# 12시간 이상 지난 항목을 자동으로 제거하는 백그라운드 태스크
+@tasks.loop(minutes=5)  # TODO : 5분마다 작동 안하는데 이유 모르겠음
+async def delete_outdated_bg():
     await client.wait_until_ready()
-
     while not client.is_closed():
-        channel = client.get_channel(c.get_relay_chat_channel())        # 릴경채널 받아옴
+        res_msg = c.delete_outdated()
 
-        # 등록된 리스트 받아와서 16시간 이상 지난 항목들 자동 제거
-        current_list = c.relay_exp_timer.get_relay_list()
-        for ent in current_list:
+        # 특정 채널로 삭제결과를 전송
+        if res_msg != "":
+            channel = client.get_channel(c.get_relay_chat_channel())
+            await channel.send(wrapper_h + res_msg + wrapper_f)
+            await asyncio.sleep(1)
 
-            elapsed_time = ent.get_elapsed_num()      # 경과 시간
-            if elapsed_time >= 960:
-                current_list.remove(ent)
-                await channel.send(wrapper_h + "[!] 16시간 이상 경과된 항목들을 자동으로 삭제하였습니다.\n" + wrapper_f)
-
+        # 삭제할 항목 없을 시 빈 문자열 받음, 알림X
+        else:
+            await asyncio.sleep(0.01)
 
 client.run(token)
